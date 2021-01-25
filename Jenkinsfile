@@ -9,7 +9,7 @@ pipeline {
     }
     
     options {
-      withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: <nom_creds>, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])
+      withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-key', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])
     }
     
     
@@ -20,7 +20,7 @@ pipeline {
     stages {
       stage('Init Terraform directory') {
         steps {
-          sh 'terraform init'
+          sh 'terraform init -backend-config=backend.tfvars'
         }
       }
       stage('Plan Terraform code') {
@@ -31,6 +31,11 @@ pipeline {
       stage('Apply Terraform code') {
         steps {
           sh 'terraform apply -auto-approve'
+        }
+      }
+      stage('output') {
+        steps {
+          sh 'terraform output ip_address'
         }
       }
     }
