@@ -18,6 +18,11 @@ pipeline {
     }
     
     stages {
+      stage('Install ansible') {
+        steps {
+          sh 'apt install ansible'
+        }
+      }
       stage('Init Terraform directory') {
         steps {
           sh 'terraform init -backend-config=backend.tfvars'
